@@ -1,17 +1,20 @@
 import { Component } from '@angular/core';
+import { TaskService } from '../../services/task';
 import { Task } from '../../Task';
-import { TASKS } from '../../mock-tasks';
-import { NgFor } from '@angular/common';
-import { TaskItem } from "../task-item/task-item";
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-tasks',
-  imports: [NgFor, TaskItem],
+  imports: [],
   templateUrl: './tasks.html',
   styleUrl: './tasks.css'
 })
 export class Tasks {
-  tasks: Task[] = TASKS;
-  faTimes = faTimes;
+  tasks: Task[] = [];
+
+  constructor(private taskService: TaskService) {
+
+  }
+  ngOnInit(): void {
+    this.taskService.getTasks().subscribe((tasks) => (this.tasks = tasks));
+  }
 }
