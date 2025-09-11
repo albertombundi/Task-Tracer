@@ -1,10 +1,14 @@
 import { Component } from '@angular/core';
-import { TaskService } from '../../services/task';
+import { CommonModule } from '@angular/common';
+import { TaskItem } from '../task-item/task-item';
 import { Task } from '../../Task';
+import { TASKS } from '../../mock-tasks';
+import { TaskService } from '../../services/task';
 
 @Component({
   selector: 'app-tasks',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, TaskItem],
   templateUrl: './tasks.html',
   styleUrl: './tasks.css'
 })
