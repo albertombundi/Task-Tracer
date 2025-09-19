@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { Header } from './components/header/header';
+import { Tasks } from './components/tasks/tasks';
 @Component({
   selector: 'app-root',
-  imports: [ Header, ],
+  imports: [ Header, Tasks ],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
