@@ -2,9 +2,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgStyle } from '@angular/common';
 @Component({
   selector: 'app-button',
+  standalone: true,
   imports: [ NgStyle ],
   templateUrl: './button.html',
-  styleUrl: './button.css'
+  styleUrls: ['./button.css']
 })
 export class Button {
   @Input() text!: string;

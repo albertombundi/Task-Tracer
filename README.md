@@ -1,4 +1,4 @@
-# TaskTracer
+# TaskTracker
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.2.
 
@@ -57,3 +57,36 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Troubleshooting / Running locally
+
+If the app can't fetch tasks from the mock API, follow these steps:
+
+1. Start the mock API (json-server):
+
+```powershell
+npm run server
+```
+
+1. Start the Angular dev server:
+
+```powershell
+npm start
+```
+
+1. If you see EADDRINUSE (address already in use) for port 5000 or 4200, identify and kill the process:
+
+```powershell
+netstat -aon | findstr 5000
+taskkill /PID <PID> /F
+```
+
+1. Confirm the API responds:
+
+```powershell
+Invoke-RestMethod -Uri 'http://localhost:5000/tasks' | ConvertTo-Json -Depth 4
+```
+
+1. Open the app in your browser (observe the port printed by `ng serve`) and open DevTools → Console. You should see a log `Tasks fetched from API: [...]` or an error message printed by the app.
+
+If problems persist, open an issue with the full console/network error and the output of `npm run server`.

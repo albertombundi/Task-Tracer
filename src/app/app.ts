@@ -1,14 +1,17 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Header } from './components/header/header';
 import { Tasks } from './components/tasks/tasks';
 import { FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @Component({
   selector: 'app-root',
-  imports: [ Header, Tasks, FontAwesomeModule ],
+  standalone: true,
+  imports: [ Header, Tasks, FontAwesomeModule , HttpClientModule, CommonModule],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css']
 })
 export class App {
   

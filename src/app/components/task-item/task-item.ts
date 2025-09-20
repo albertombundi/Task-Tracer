@@ -8,7 +8,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
   standalone: true,
   imports: [CommonModule, FontAwesomeModule],
   templateUrl: './task-item.html',
-  styleUrl: './task-item.css'
+  styleUrls: ['./task-item.css']
 })
 export class TaskItem {
    @Input() task!: Task;

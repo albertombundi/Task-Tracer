@@ -9,13 +9,21 @@ import { TaskItem } from '../task-item/task-item';
   standalone: true,
   imports: [CommonModule, TaskItem],
   templateUrl: './tasks.html',
-  styleUrl: './tasks.css'
+  styleUrls: ['./tasks.css']
 })
 export class Tasks implements OnInit {
   tasks: Task[] = [];
 
   constructor(private taskService: TaskService) {}
   ngOnInit(): void {
-    this.taskService.getTasks().subscribe((tasks) => this.tasks=tasks )
+    this.taskService.getTasks().subscribe({
+      next: (tasks) => {
+        console.log('Tasks fetched from API:', tasks);
+        this.tasks = tasks;
+      },
+      error: (err) => {
+        console.error('Error fetching tasks:', err);
+      }
+    });
   }
 }
