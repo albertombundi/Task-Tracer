@@ -16,15 +16,7 @@ export class Tasks implements OnInit {
 
   constructor(private taskService: TaskService) {}
   ngOnInit(): void {
-    this.taskService.getTasks().subscribe({
-      next: (tasks) => {
-        console.log('Tasks fetched from API:', tasks);
-        this.tasks = tasks;
-      },
-      error: (err) => {
-        console.error('Error fetching tasks:', err);
-      }
-    });
+    this.taskService.getTasks().subscribe((tasks) => (this.tasks = tasks));
   }
 
   deleteTask(task: Task) {
@@ -33,5 +25,10 @@ export class Tasks implements OnInit {
      .subscribe(
       () => { this.tasks = this.tasks.filter((t) => t.id !== task.id);
     });
+  }
+
+  toggleReminder(task: Task) {
+    task.reminder = !task.reminder;
+    console.log(task.reminder);
   }
 }
