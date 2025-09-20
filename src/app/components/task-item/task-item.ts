@@ -1,13 +1,17 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Task } from '../../Task';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-task-item',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FontAwesomeModule],
   templateUrl: './task-item.html',
   styleUrl: './task-item.css'
 })
 export class TaskItem {
    @Input() task!: Task;
+
+   faTimes = faTimes;
 }
