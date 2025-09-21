@@ -1,65 +1,49 @@
 ### Objetivo
 
-Fornecer instruções concisas e acionáveis para agentes de codificação (AI) que vão trabalhar neste front-end Angular (task-tracker). Priorize mudanças pequenas e reversíveis: componentes standalone, serviço de tarefas e integração com o servidor mock (`json-server`).
+Fornecer instruções práticas e direcionadas para agentes de codificação (AI) que vão trabalhar neste front-end Angular (standalone components). Priorize mudanças pequenas e reversíveis: componente standalone, serviço de tarefas, ou pequenas alterações no mock backend.
 
-## Resumo rápido
-- Angular standalone (v20.x). Entrypoint: `src/main.ts` → `App` (`src/app/app.ts`).
-- Componentes principais: `src/app/components/` — `header`, `tasks`, `task-item` (todos standalone).
-- Serviço HTTP: `src/app/services/task-service.ts` usa `HttpClient`. API mock em `http://localhost:5000/tasks`.
-- Mock/local DB: `src/app/mock-tasks.ts` (exemplos em memória) e `db.json` (usado por `json-server`).
+## Panorama rápido (arquitetura)
+- Projeto Angular v20 usando componentes standalone. Entrypoint: `src/main.ts` -> `bootstrapApplication(App, appConfig)`.
+- Componentes UI em `src/app/components/` (cada componente tem `.ts`, `.html`, `.css`). Ex.: `tasks`, `task-item`, `header`.
+- Serviço HTTP central: `src/app/services/task-service.ts` (usa `HttpClient`). Ponto único de API: `API_URL` em `src/app/app.config.ts`.
 
-### Objetivo
-
-Instruções concisas e acionáveis para agentes de codificação que vão trabalhar neste front-end Angular (standalone components, serviço de tarefas e integração com o mock backend).
-
-Resumo rápido
-- Framework: Angular v20 (standalone components).
-- Entrypoint: `src/main.ts` → bootstrapApplication(App, appConfig).
-- App: `src/app/app.ts` é um componente standalone que importa `Header`, `Tasks`, `FontAwesomeModule` e `HttpClientModule`.
-- API base: `API_URL` exportado em `src/app/app.config.ts` (atualmente `http://localhost:5000/tasks`).
-- Mock data: `src/app/mock-tasks.ts` (exemplos) e `db.json` (usado por `json-server`).
-
-Comandos essenciais
+## Comandos essenciais
 - npm install
-- npm run server    # executa `json-server --watch db.json --port 5000`
-- npm start         # `ng serve` — abre em http://localhost:4200
-- npm test          # Karma + Jasmine
+- npm run server    # inicializa json-server: `json-server --watch db.json --port 5000` (API: http://localhost:5000/tasks)
+- npm start         # ng serve — dev server em http://localhost:4200
+- npm test          # executa testes (Karma + Jasmine)
 
-Contracts & exemplos rápidos
-- Modelo `Task` (`src/app/Task.ts`):
-  `{ id?: number; text: string; day: string; reminder: boolean }`
-- Serviço HTTP (`src/app/services/task-service.ts`):
-  `getTasks(): Observable<Task[]>` — usa `API_URL` importado de `app.config.ts`.
-  Exemplo de POST se precisar adicionar: `addTask(task: Task) { return this.http.post<Task>(this.apiUrl, task); }`
+## Convenções e padrões do repositório
+- Componentes: sempre standalone. Use `@Component({ standalone: true, imports: [...] })` e mantenha templates/estilos ao lado do `.ts`.
+- Naming: arquivos em kebab-case, classes em PascalCase. Ex.: `task-item.ts` -> class `TaskItem`.
+- App providers: `src/app/app.config.ts` configura `HttpClientModule` via `importProvidersFrom(HttpClientModule)` e exporta `API_URL`.
+- Modelo de dados: `src/app/Task.ts` define `{ id?: number; text: string; day: string; reminder: boolean }` — mantenha campos id/text/day/reminder ao alterar shape.
 
-Arquitetura e convenções específicas
-- Componentes standalone em `src/app/components/*` (ex.: `header`, `tasks`, `task-item`). Use `@Component({ standalone: true, imports: [...] })`.
-- Templates e estilos ficam ao lado do componente: `component.html` / `component.css`.
-- Classes em PascalCase; arquivos em kebab-case (ex.: `task-item.ts`).
-- App-wide providers: `src/app/app.config.ts` importa `HttpClientModule` via `importProvidersFrom(HttpClientModule)` e exporta `API_URL`.
+## Integração e fluxo de dados
+- Single source API: `API_URL` (ex.: `http://localhost:5000/tasks`) — importe esse token em serviços.
+- `TaskService` é providedIn:'root' e expõe:
+  - `getTasks(): Observable<Task[]>` -> GET API_URL
+  - `deleteTask(task: Task)` -> DELETE `${API_URL}/${task.id}`
+  - `updateTaskReminder(task: Task)` -> PUT `${API_URL}/${task.id}` com JSON
+  - `toggleReminder(task: Task)` apenas inverte localmente o boolean; chame `updateTaskReminder` para persistir
 
-Pontos práticos ao editar
-- Sempre verifique `API_URL` em `src/app/app.config.ts` ao mudar a porta/endpoint do mock.
-- `mock-tasks.ts` é só um exemplo em memória; o app usa `API_URL`/HttpClient por padrão. Confirme antes de remover mocks.
-- Rode `npm run server` antes de `npm start` para evitar erros 404/CORS contra `db.json`.
+## Padrões práticos e armadilhas comuns
+- Sempre rode `npm run server` antes de `npm start` para evitar 404/CORS ao acessar `db.json`.
+- `mock-tasks.ts` contém exemplos em memória; a aplicação usa `json-server` em dev por padrão.
+- Não altere o bootstrap (`src/main.ts`) para módulos sem um motivo de migração completa — componentes e providers dependem do `appConfig` exportado.
 
-Onde olhar primeiro (impacto alto → baixo)
-- `src/app/components/tasks/tasks.ts` + `tasks.html` — listagem e consumo de `TaskService`.
-- `src/app/components/task-item/*` — UI e eventos de toggle/delete.
-- `src/app/services/task-service.ts` — chamadas HTTP; estende aqui POST/PUT/DELETE.
-- `src/app/app.config.ts` — `API_URL` e providers.
-- `db.json` / `src/app/mock-tasks.ts` — dados de exemplo.
+## Arquivos para inspeção rápida ao fazer mudanças
+- UI/listagem: `src/app/components/tasks/tasks.ts` + `tasks.html`
+- Item e eventos: `src/app/components/task-item/*` (toggle, delete)
+- HTTP e regras de negócio: `src/app/services/task-service.ts`
+- App-wide config: `src/app/app.config.ts` (contém `API_URL` e providers)
+- Dados de exemplo: `db.json` e `src/app/mock-tasks.ts`
 
-Testes e fluxo de desenvolvimento
-- Tests unitários com Karma + Jasmine: arquivos `*.spec.ts` ao lado dos componentes e serviços. Rode `npm test`.
-- Para PRs pequenos: inclua passos para rodar (`npm run server`, `npm start`) e cenários de verificação (criar/excluir/toggle reminder).
+## Checklist para PRs (AI agents)
+- Mantenha PRs pequenos (um componente ou um método de serviço).
+- Inclua passos de verificação: `npm run server`, `npm start`, rota(s) testadas, e prints do console se relevante.
+- Se alterar shape de `Task`, atualize `src/app/Task.ts`, `db.json`, e adicione/atualize um `*.spec.ts` simples.
 
-Checklist rápido ao abrir um PR
-- `npm install` ok
-- `npm run server` (porta 5000 respondendo)
-- `npm start` sem erros no console
-- Testes unitários (happy-path) pelo menos verdes localmente
+---
 
-Se algo estiver ambíguo: abra uma issue com detalhes do erro/console e os passos para reproduzir.
-
-Solicito feedback: falta algum fluxo (ex.: e2e, CI) que vocês usam? Informe e eu atualizo estas instruções.
+Se quiser expandir alguma seção (tests, CI, e2e ou migração para módulos), diga qual foco e eu adapto o documento.
