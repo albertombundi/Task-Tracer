@@ -1,15 +1,16 @@
-export const API_URL = 'http://localhost:5000/tasks';
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, importProvidersFrom } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+// src/app/app.config.ts
 
-import { routes } from './app.routes';
+export const API_URL = 'http://localhost:5000/tasks';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { routes } from './app.routes'; 
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
-    importProvidersFrom(HttpClientModule)
-  ]
+ providers: [
+  provideBrowserGlobalErrorListeners(),
+  provideZoneChangeDetection({ eventCoalescing: true }),
+  provideRouter(routes),
+  provideHttpClient()
+ ]
 };
