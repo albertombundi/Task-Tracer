@@ -16,8 +16,11 @@ export class Tasks implements OnInit {
   tasks: Task[] = [];
 
   constructor(private taskService: TaskService) {}
+
   ngOnInit(): void {
-    this.taskService.getTasks().subscribe((tasks) => (this.tasks = tasks));
+     this.taskService.getTasks().subscribe((tasks) => {
+      this.tasks = tasks;
+    });
   }
 
   deleteTask(task: Task) {
