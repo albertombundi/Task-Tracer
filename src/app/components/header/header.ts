@@ -2,20 +2,21 @@ import { Component } from '@angular/core';
 import { Button } from '../button/button';
 import { Ui } from '../../services/ui';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [ Button,  ],
+  imports: [  Button],
   templateUrl: './header.html',
   styleUrls: ['./header.css']
 })
 export class Header {
   title: string = 'Task Tracker';
-  showAddTask: boolean = true;
+  showAddTask: boolean = false;
   subscription!: Subscription;
 
-  constructor(private ui: Ui) {
+  constructor(private ui: Ui, private router:Router) {
     this.subscription = this.ui
     .onToggle()
     .subscribe(value => this.showAddTask = value);
@@ -23,6 +24,10 @@ export class Header {
 
   toggleAddTask() {
     this.ui.toggleAddTask();
+  }
+
+  hasRoute(route: string) {
+    return this.router.url === route;
   }
 
 }

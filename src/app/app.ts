@@ -6,7 +6,6 @@ import {FormsModule} from '@angular/forms';
 import { RouterModule } from '@angular/router'; 
 import { Footer } from './components/footer/footer';
 
-
 @Component({
   selector: 'app-root',
   standalone: true,
